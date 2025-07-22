@@ -1,24 +1,18 @@
-import subprocess, random, time, datetime
+import subprocess
+import random
+import time
+import datetime
 
+# How many times to run per day
 RUNS_PER_DAY = random.randint(15, 20)
-SCRIPT = "auto_form_cloud.py"
 
-def run_once():
-    print(f"[{datetime.datetime.now()}] Starting form submission...")
-    try:
-        subprocess.run(["python", SCRIPT], check=True)
-        print(f"[{datetime.datetime.now()}] Run complete.\n")
-    except subprocess.CalledProcessError as e:
-        print(f"[{datetime.datetime.now()}] Run failed: {e}. Retrying in 5 min...")
-        time.sleep(300)
-        run_once()
-
-# Spread runs evenly across the day
-interval = (24 * 3600) / RUNS_PER_DAY
+print(f"Planned runs for today: {RUNS_PER_DAY}")
 
 for i in range(RUNS_PER_DAY):
-    run_once()
-    # Wait a random time near the interval (±30%)
-    wait_time = interval * random.uniform(0.7, 1.3)
-    print(f"Next run in {wait_time / 60:.1f} minutes.")
+    print(f"\nRun {i+1}/{RUNS_PER_DAY} - {datetime.datetime.now().strftime('%H:%M:%S')}")
+    subprocess.run(["python", "auto_form_cloud.py"])
+    
+    # Random wait time between runs: 20 to 60 minutes
+    wait_time = random.randint(20 * 60, 60 * 60)
+    print(f"Waiting {wait_time // 60} minutes before next run...\n")
     time.sleep(wait_time)
